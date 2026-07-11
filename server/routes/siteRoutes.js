@@ -1,8 +1,11 @@
 import express from "express";
-import { getAllSites } from "../controllers/siteController.js";
+import { getAllSites, createSite } from "../controllers/siteController.js";
+import { protect, adminOnly } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.get("/", getAllSites);
+
+router.post("/", protect, adminOnly, createSite);
 
 export default router;

@@ -9,6 +9,10 @@ import timeSlotRoutes from "./routes/timeSlotRoutes.js";
 import http from "http";
 import { Server } from "socket.io";
 import { initializeSocket } from "./socket/socket.js";
+import {
+  notFound,
+  errorHandler,
+} from "./middleware/errorMiddleware.js";
 
 dotenv.config();
 
@@ -33,6 +37,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/sites", siteRoutes);
 app.use("/api/slots", timeSlotRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
 
 app.get("/", (req, res) => {
   res.send("Reservation System API is Running 🚀");

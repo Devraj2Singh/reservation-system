@@ -12,3 +12,30 @@ export const getAllSites = async (req, res) => {
     });
   }
 };
+
+export const createSite = async (req, res) => {
+  try {
+    const { name, location, description } = req.body;
+
+    if (!name || !location) {
+      return res.status(400).json({
+        message: "Name and location are required",
+      });
+    }
+
+    const site = await Site.create({
+      name,
+      location,
+      description,
+    });
+
+    res.status(201).json({
+      message: "Site created successfully",
+      site,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
