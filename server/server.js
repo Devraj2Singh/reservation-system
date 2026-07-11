@@ -38,12 +38,12 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/sites", siteRoutes);
 app.use("/api/slots", timeSlotRoutes);
 
-app.use(notFound);
-app.use(errorHandler);
-
 app.get("/", (req, res) => {
   res.send("Reservation System API is Running 🚀");
 });
+
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
