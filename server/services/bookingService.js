@@ -57,10 +57,10 @@ export const createReservation = async (user, bookingData) => {
     await session.commitTransaction();
 
     // Notify dashboard
-    // getIO().emit("capacityUpdated", {
-    //     slotId: slot._id,
-    //     availableTickets: slot.availableTickets,
-    // });
+    getIO().emit("capacityUpdated", {
+        slotId: slot._id,
+        availableTickets: slot.availableTickets,
+    });
 
     return {
       message: "Booking Successful",
@@ -111,6 +111,11 @@ export const cancelReservation = async (user, reservationId) => {
     await reservation.save({ session });
 
     await session.commitTransaction();
+
+    getIO().emit("capacityUpdated", {
+    slotId: slot._id,
+    availableTickets: slot.availableTickets,
+});
 
     return {
       message: "Reservation Cancelled Successfully",
