@@ -1,41 +1,30 @@
+import asyncHandler from "../utils/asyncHandler.js";
 import Site from "../models/Site.js";
 
-export const getAllSites = async (req, res) => {
-  try {
-    const sites = await Site.find();
+// Get All Sites
+export const getAllSites = asyncHandler(async (req, res) => {
+  const sites = await Site.find();
 
-    res.status(200).json(sites);
+  res.status(200).json(sites);
+});
 
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+// Create New Site (Admin)
+export const createSite = asyncHandler(async (req, res) => {
+  const { name, location, description } = req.body;
+
+  if (!name || !location) {
+    res.status(400);
+    throw new Error("Name and location are required");
   }
-};
 
-export const createSite = async (req, res) => {
-  try {
-    const { name, location, description } = req.body;
+  const site = await Site.create({
+    name,
+    location,
+    description,
+  });
 
-    if (!name || !location) {
-      return res.status(400).json({
-        message: "Name and location are required",
-      });
-    }
-
-    const site = await Site.create({
-      name,
-      location,
-      description,
-    });
-
-    res.status(201).json({
-      message: "Site created successfully",
-      site,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+  res.status(201).json({
+    message: "Site created successfully",
+    site,
+  });
+});

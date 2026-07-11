@@ -1,3 +1,5 @@
+import asyncHandler from "../utils/asyncHandler.js";
+
 import {
   createReservation,
   cancelReservation,
@@ -5,70 +7,33 @@ import {
   getMyReservations,
 } from "../services/bookingService.js";
 
-export const createBooking = async (req, res) => {
-  try {
-    const data = await createReservation(req.user, req.body);
+// Create Booking
+export const createBooking = asyncHandler(async (req, res) => {
+  const data = await createReservation(req.user, req.body);
 
-    res.status(201).json(data);
-  } catch (error) {
-    res.status(400).json({
-      message: error.message,
-    });
-  }
-};
+  res.status(201).json(data);
+});
 
-export const cancelBooking = async (req, res) => {
+// Cancel Booking
+export const cancelBooking = asyncHandler(async (req, res) => {
+  const result = await cancelReservation(
+    req.user,
+    req.params.id
+  );
 
-    try {
+  res.status(200).json(result);
+});
 
-        const result = await cancelReservation(
-            req.user,
-            req.params.id
-        );
+// Get Capacity
+export const getCapacity = asyncHandler(async (req, res) => {
+  const data = await getCapacityData();
 
-        res.json(result);
+  res.status(200).json(data);
+});
 
-    }
-    catch(error){
+// Get Logged-in User Bookings
+export const getMyBookings = asyncHandler(async (req, res) => {
+  const bookings = await getMyReservations(req.user);
 
-        res.status(400).json({
-            message:error.message
-        })
-
-    }
-
-}
-
-export const getCapacity = async (req,res)=>{
-
-    try{
-
-        const data=await getCapacityData();
-
-        res.json(data);
-
-    }
-
-    catch(error){
-
-        res.status(500).json({
-
-            message:error.message
-
-        })
-
-    }
-
-}
-
-export const getMyBookings = async (req, res) => {
-  try {
-    const bookings = await getMyReservations(req.user);
-
-    res.status(200).json(bookings);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+  res.status(200).json(bookings);
+});
